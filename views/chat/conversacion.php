@@ -181,6 +181,15 @@
                     </div>
 
                     <div class="mb-3">
+                        <label class="form-label text-secondary small">Método de Pago Acordado</label>
+                        <select name="metodo_pago" class="form-select bg-dark text-white border-secondary">
+                            <option value="Efectivo Contraentrega">💵 Efectivo Contraentrega</option>
+                            <option value="Nequi">🟣 Transferencia Nequi</option>
+                            <option value="Daviplata">🔴 Daviplata</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
                         <label class="form-label text-secondary small">Valor Total Acordado (COP) *</label>
                         <input type="number" name="monto_total" class="form-control" placeholder="Ej. 65000" min="1000" step="500" required>
                         <small class="text-muted" style="font-size: 0.72rem;">La plataforma calculará automáticamente la tarifa de protección del 5%.</small>

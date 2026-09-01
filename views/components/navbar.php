@@ -82,17 +82,63 @@
                     <input type="text" class="search-input" placeholder="Buscar pueblo o barrio (ej. Yaguará, Neiva, Campoalegre, Rivera)...">
                 </div>
                 
-                <div class="list-group">
-                    <a href="#" class="list-group-item list-group-item-action mb-3" style="background:var(--bg-card); border:1px solid #f97316; border-radius:12px; padding:1rem;">
-                        <div class="d-flex align-items-center justify-content-between">
+                <div class="list-group d-flex flex-column gap-2">
+                    <!-- Yaguará -->
+                    <a href="<?= BASE_URL ?>index.php?url=home/index" class="list-group-item list-group-item-action text-decoration-none" style="background:var(--bg-card); border:1px solid #ff5c00; border-radius:12px; padding:1rem;">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
                             <div class="d-flex align-items-center gap-3">
-                                <div style="width:40px;height:40px;background:#ea580c;color:white;border-radius:8px;display:flex;align-items:center;justify-content:center;"><i class="fas fa-building"></i></div>
+                                <div style="width:40px;height:40px;background:#ff5c00;color:white;border-radius:8px;display:flex;align-items:center;justify-content:center;"><i class="fas fa-building"></i></div>
                                 <div>
-                                    <h6 class="mb-1 text-white fw-bold d-flex align-items-center gap-2">Yaguará <span class="badge bg-secondary" style="font-size:0.6rem;">Huila</span> <span class="badge bg-warning text-dark" style="font-size:0.6rem;"><i class="fas fa-star"></i> Principal</span></h6>
-                                    <small class="text-muted">38 comercios y prestadores registrados</small>
+                                    <h6 class="mb-0 text-white fw-bold d-flex align-items-center gap-2">Yaguará <span class="badge bg-secondary" style="font-size:0.6rem;">Huila</span> <span class="badge bg-warning text-dark" style="font-size:0.6rem;"><i class="fas fa-star"></i> Principal</span></h6>
+                                    <small class="text-secondary" style="font-size: 0.75rem;">38 comercios y prestadores registrados</small>
                                 </div>
                             </div>
-                            <div style="width:24px;height:24px;background:#ea580c;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:0.7rem;"><i class="fas fa-check"></i></div>
+                            <div style="width:24px;height:24px;background:#ff5c00;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:0.7rem;"><i class="fas fa-check"></i></div>
+                        </div>
+                        <div class="d-flex gap-1 flex-wrap pt-1">
+                            <span class="badge bg-dark text-secondary border border-secondary" style="font-size:0.65rem;">Centro</span>
+                            <span class="badge bg-dark text-secondary border border-secondary" style="font-size:0.65rem;">El Triunfo</span>
+                            <span class="badge bg-dark text-secondary border border-secondary" style="font-size:0.65rem;">Las Ferias</span>
+                            <span class="badge bg-dark text-secondary border border-secondary" style="font-size:0.65rem;">Barrio Upar</span>
+                            <span class="badge bg-dark text-secondary border border-secondary" style="font-size:0.65rem;">Malecón Betania</span>
+                        </div>
+                    </a>
+
+                    <!-- Neiva -->
+                    <a href="<?= BASE_URL ?>index.php?url=negocio/listado" class="list-group-item list-group-item-action text-decoration-none" style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:12px; padding:1rem;">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <div class="d-flex align-items-center gap-3">
+                                <div style="width:40px;height:40px;background:#252930;color:#a3a8b0;border-radius:8px;display:flex;align-items:center;justify-content:center;"><i class="fas fa-city"></i></div>
+                                <div>
+                                    <h6 class="mb-0 text-white fw-bold d-flex align-items-center gap-2">Neiva <span class="badge bg-secondary" style="font-size:0.6rem;">Huila</span></h6>
+                                    <small class="text-secondary" style="font-size: 0.75rem;">124 comercios y prestadores</small>
+                                </div>
+                            </div>
+                            <span class="text-secondary small"><i class="fas fa-chevron-right"></i></span>
+                        </div>
+                        <div class="d-flex gap-1 flex-wrap pt-1">
+                            <span class="badge bg-dark text-secondary border border-secondary" style="font-size:0.65rem;">Centro</span>
+                            <span class="badge bg-dark text-secondary border border-secondary" style="font-size:0.65rem;">El Quirinal</span>
+                            <span class="badge bg-dark text-secondary border border-secondary" style="font-size:0.65rem;">Las Granjas</span>
+                        </div>
+                    </a>
+
+                    <!-- Campoalegre -->
+                    <a href="<?= BASE_URL ?>index.php?url=negocio/listado" class="list-group-item list-group-item-action text-decoration-none" style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:12px; padding:1rem;">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <div class="d-flex align-items-center gap-3">
+                                <div style="width:40px;height:40px;background:#252930;color:#a3a8b0;border-radius:8px;display:flex;align-items:center;justify-content:center;"><i class="fas fa-tractor"></i></div>
+                                <div>
+                                    <h6 class="mb-0 text-white fw-bold d-flex align-items-center gap-2">Campoalegre <span class="badge bg-secondary" style="font-size:0.6rem;">Huila</span></h6>
+                                    <small class="text-secondary" style="font-size: 0.75rem;">32 comercios y prestadores</small>
+                                </div>
+                            </div>
+                            <span class="text-secondary small"><i class="fas fa-chevron-right"></i></span>
+                        </div>
+                        <div class="d-flex gap-1 flex-wrap pt-1">
+                            <span class="badge bg-dark text-secondary border border-secondary" style="font-size:0.65rem;">Centro</span>
+                            <span class="badge bg-dark text-secondary border border-secondary" style="font-size:0.65rem;">Gaitán</span>
+                            <span class="badge bg-dark text-secondary border border-secondary" style="font-size:0.65rem;">La Caraguaja</span>
                         </div>
                     </a>
                 </div>
