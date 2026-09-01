@@ -75,8 +75,9 @@ $prodsDestacados = $prodModel->getByNegocio($negocio['id']);
             <div class="d-flex flex-column gap-1 mb-3">
                 <?php if (!empty($prodsDestacados)): ?>
                     <?php foreach (array_slice($prodsDestacados, 0, 2) as $prod): ?>
-                        <div class="highlight-pill px-2 py-1 text-truncate" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.2); font-size: 0.75rem; font-weight: 500; border-radius: 6px;" title="<?= htmlspecialchars($prod['nombre']) ?>">
-                            <?= htmlspecialchars($prod['nombre']) ?> $<?= number_format($prod['precio'], 0, ',', '.') ?>
+                        <div class="highlight-pill px-2 py-1 text-truncate d-flex justify-content-between align-items-center" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.2); font-size: 0.75rem; font-weight: 500; border-radius: 6px; cursor: pointer;" title="Clic para agregar al carrito" onclick="addToCart(<?= $prod['id'] ?>, '<?= addslashes($prod['nombre']) ?>', <?= $prod['precio'] ?>, <?= $negocio['id'] ?>, '<?= addslashes($negocio['nombre']) ?>')">
+                            <span class="text-truncate"><?= htmlspecialchars($prod['nombre']) ?> $<?= number_format($prod['precio'], 0, ',', '.') ?></span>
+                            <i class="fas fa-plus-circle ms-1 text-warning" style="font-size: 0.75rem;"></i>
                         </div>
                     <?php endforeach; ?>
                 <?php else: ?>

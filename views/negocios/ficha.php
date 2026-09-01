@@ -105,17 +105,16 @@ $diaHoy = (int)date('w');
                                         <?= htmlspecialchars($prod['descripcion']) ?>
                                     </p>
                                 </div>
-                                <div class="d-flex justify-content-between align-items-center pt-2 border-top" style="border-color:var(--border-color)!important;">
+                                <div class="d-flex justify-content-between align-items-center pt-2 border-top gap-2" style="border-color:var(--border-color)!important;">
                                     <small class="text-muted" style="font-size:0.7rem;">Por <?= htmlspecialchars($prod['unidad_medida']) ?></small>
-                                    <?php if (isset($_SESSION['usuario_id'])): ?>
-                                        <a href="<?= BASE_URL ?>index.php?url=chat/conversacion/<?= $n['id'] ?>" class="btn btn-sm btn-outline-warning d-flex align-items-center gap-1" style="font-size:0.75rem; border-radius:8px;">
-                                            <i class="fas fa-comment-dots"></i> Chatear / Pedir
+                                    <div class="d-flex gap-1">
+                                        <button type="button" class="btn btn-sm btn-outline-warning d-flex align-items-center gap-1" onclick="addToCart(<?= $prod['id'] ?>, '<?= addslashes($prod['nombre']) ?>', <?= $prod['precio'] ?>, <?= $n['id'] ?>, '<?= addslashes($n['nombre']) ?>')" style="font-size:0.75rem; border-radius:8px;">
+                                            <i class="fas fa-cart-plus"></i> Carrito
+                                        </button>
+                                        <a href="<?= isset($_SESSION['usuario_id']) ? BASE_URL . 'index.php?url=chat/conversacion/' . $n['id'] : BASE_URL . 'index.php?url=autenticacion/login' ?>" class="btn btn-sm btn-warning text-dark fw-bold d-flex align-items-center gap-1" style="background: var(--color-primary); color: white !important; border: none; font-size:0.75rem; border-radius:8px;">
+                                            <i class="fas fa-comment-dots"></i> Chat
                                         </a>
-                                    <?php else: ?>
-                                        <a href="<?= BASE_URL ?>index.php?url=autenticacion/login" class="btn btn-sm btn-outline-warning d-flex align-items-center gap-1" title="Inicia sesión para pedir" style="font-size:0.75rem; border-radius:8px;">
-                                            <i class="fas fa-comment-dots"></i> Chatear / Pedir
-                                        </a>
-                                    <?php endif; ?>
+                                    </div>
                                 </div>
                             </div>
                         </div>

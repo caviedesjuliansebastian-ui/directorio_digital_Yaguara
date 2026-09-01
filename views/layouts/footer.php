@@ -3,6 +3,7 @@
     <!-- Footer -->
     <?php if (empty($sinFooter)): ?>
         <?php include ROOT_PATH . 'views/components/footer_component.php'; ?>
+        <?php include ROOT_PATH . 'views/components/cart_drawer.php'; ?>
     <?php endif; ?>
 
     <!-- Bootstrap 5 JS -->
