@@ -43,6 +43,21 @@ class Negocio extends Model {
         return $stmt->fetch();
     }
 
+    // Obtener negocios por usuario ID (para panel de proveedor)
+    public function getByUsuarioId($usuarioId) {
+        $stmt = $this->db->prepare("
+            SELECT n.*, c.nombre as categoria_nombre, c.icono as categoria_icono, c.color as categoria_color,
+                   s.nombre as sector_nombre
+            FROM negocios n
+            LEFT JOIN categorias c ON n.categoria_id = c.id
+            LEFT JOIN sectores s ON n.sector_id = s.id
+            WHERE n.usuario_id = ?
+            ORDER BY n.fecha_creacion DESC
+        ");
+        $stmt->execute([$usuarioId]);
+        return $stmt->fetchAll();
+    }
+
     // Obtener negocio por slug
     public function getBySlug($slug) {
         $stmt = $this->db->prepare("
