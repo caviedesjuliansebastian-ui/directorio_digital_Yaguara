@@ -2,6 +2,14 @@
 // Obtener productos destacados de este negocio
 $prodModel = new Producto();
 $prodsDestacados = $prodModel->getByNegocio($negocio['id']);
+
+// Verificar si este negocio está en favoritos del usuario
+global $favoritosIdsUsuario;
+if (!isset($favoritosIdsUsuario) && isset($_SESSION['usuario_id'])) {
+    $favModel = new Favorito();
+    $favoritosIdsUsuario = $favModel->getIdsPorUsuario($_SESSION['usuario_id']);
+}
+$esFavCard = isset($_SESSION['usuario_id']) && in_array($negocio['id'], $favoritosIdsUsuario ?? []);
 ?>
 <div class="col">
     <div class="servigo-card h-100">
@@ -22,8 +30,9 @@ $prodsDestacados = $prodModel->getByNegocio($negocio['id']);
                 <i class="fas fa-store"></i> Comercio / Catálogo
             </div>
             
-            <button class="card-icon-right" style="position: absolute; top: 0.75rem; right: 3.5rem; width: 32px; height: 32px; border-radius: 50%; background: rgba(0,0,0,0.6); color: white; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); border: none;"><i class="fas fa-qrcode" style="font-size: 0.85rem;"></i></button>
-            <button class="card-fav-btn" style="position: absolute; top: 0.75rem; right: 0.75rem; width: 32px; height: 32px; border-radius: 50%; background: #ef4444; color: white; display: flex; align-items: center; justify-content: center; border: none; font-size: 0.85rem;"><i class="fas fa-heart"></i></button>
+            <button type="button" class="card-fav-btn" data-negocio-id="<?= $negocio['id'] ?>" onclick="toggleFavorito(<?= $negocio['id'] ?>, this, event)" style="position: absolute; top: 0.75rem; right: 0.75rem; width: 34px; height: 34px; border-radius: 50%; background: <?= $esFavCard ? '#ef4444' : 'rgba(0,0,0,0.6)' ?>; color: white; display: flex; align-items: center; justify-content: center; border: none; font-size: 0.9rem; cursor: pointer; transition: all 0.2s ease; backdrop-filter: blur(4px); z-index: 10;" title="<?= $esFavCard ? 'Quitar de favoritos' : 'Guardar en favoritos' ?>">
+                <i class="<?= $esFavCard ? 'fas' : 'far' ?> fa-heart"></i>
+            </button>
             
             <div class="card-distance" style="position: absolute; bottom: 0.75rem; right: 0.75rem; background: rgba(0,0,0,0.75); color: #e5e5e5; font-size: 0.7rem; font-weight: 600; padding: 0.25rem 0.6rem; border-radius: 6px; backdrop-filter: blur(4px); display: flex; align-items: center; gap: 0.35rem;">
                 <i class="fas fa-map-marker-alt text-warning"></i> 0.8 km • <?= htmlspecialchars($negocio['sector_nombre'] ?? 'Centro') ?>

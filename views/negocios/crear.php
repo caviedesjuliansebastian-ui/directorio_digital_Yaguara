@@ -65,13 +65,9 @@
                         </div>
                         
                         <div class="row g-3 mb-3">
-                            <div class="col-md-6">
-                                <label for="telefono" class="form-label">Teléfono</label>
+                            <div class="col-12">
+                                <label for="telefono" class="form-label">Teléfono de Contacto</label>
                                 <input type="text" class="form-control" id="telefono" name="telefono" placeholder="3001234567">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="whatsapp" class="form-label">WhatsApp</label>
-                                <input type="text" class="form-control" id="whatsapp" name="whatsapp" placeholder="3001234567">
                             </div>
                         </div>
                         

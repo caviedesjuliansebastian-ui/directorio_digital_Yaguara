@@ -19,6 +19,14 @@ class Favorito extends Model {
         }
     }
 
+    // Obtener array de IDs de negocios favoritos de un usuario
+    public function getIdsPorUsuario($usuarioId) {
+        if (!$usuarioId) return [];
+        $stmt = $this->db->prepare("SELECT negocio_id FROM favoritos WHERE usuario_id = ?");
+        $stmt->execute([$usuarioId]);
+        return $stmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
+    }
+
     // Obtener favoritos de un usuario
     public function getPorUsuario($usuarioId) {
         $stmt = $this->db->prepare("

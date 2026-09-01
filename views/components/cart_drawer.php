@@ -68,12 +68,13 @@
 // Carrito State Manager
 let cart = JSON.parse(localStorage.getItem('servigo_cart') || '[]');
 
-function addToCart(id, name, price, businessId, businessName) {
+function addToCart(id, name, price, businessId, businessName, qty = 1) {
+    const quantity = parseInt(qty) || 1;
     const existing = cart.find(item => item.id === id);
     if (existing) {
-        existing.qty += 1;
+        existing.qty += quantity;
     } else {
-        cart.push({ id, name, price: parseFloat(price), businessId, businessName, qty: 1 });
+        cart.push({ id, name, price: parseFloat(price), businessId, businessName, qty: quantity });
     }
     saveCart();
     renderCart();

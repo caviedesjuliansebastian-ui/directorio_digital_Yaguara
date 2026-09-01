@@ -19,7 +19,7 @@
         
         <div class="admin-metric-card">
             <div class="metric-title">Ventas Plataforma (GMV)</div>
-            <div class="metric-value">$380.000</div>
+            <div class="metric-value">$300.000</div>
             <div class="metric-sub">Total transaccionado</div>
         </div>
         

@@ -89,10 +89,26 @@ class Negocio extends Model {
         ";
 
         if (!empty($query)) {
-            $sql .= " AND (n.nombre LIKE ? OR n.descripcion LIKE ? OR n.direccion LIKE ?)";
-            $params[] = '%' . $query . '%';
-            $params[] = '%' . $query . '%';
-            $params[] = '%' . $query . '%';
+            $sql .= " AND (
+                n.nombre LIKE ? 
+                OR n.descripcion LIKE ? 
+                OR n.direccion LIKE ?
+                OR c.nombre LIKE ?
+                OR s.nombre LIKE ?
+                OR EXISTS (
+                    SELECT 1 FROM productos p 
+                    WHERE p.negocio_id = n.id 
+                    AND (p.nombre LIKE ? OR p.descripcion LIKE ?)
+                )
+            )";
+            $param = '%' . $query . '%';
+            $params[] = $param;
+            $params[] = $param;
+            $params[] = $param;
+            $params[] = $param;
+            $params[] = $param;
+            $params[] = $param;
+            $params[] = $param;
         }
 
         if ($categoriaId) {
@@ -121,13 +137,35 @@ class Negocio extends Model {
     // Contar resultados de búsqueda
     public function contarBusqueda($query = '', $categoriaId = null, $sectorId = null, $soloVerificados = false) {
         $params = [];
-        $sql = "SELECT COUNT(*) FROM negocios n WHERE n.estado = 'activo'";
+        $sql = "
+            SELECT COUNT(*) 
+            FROM negocios n 
+            LEFT JOIN categorias c ON n.categoria_id = c.id
+            LEFT JOIN sectores s ON n.sector_id = s.id
+            WHERE n.estado = 'activo'
+        ";
 
         if (!empty($query)) {
-            $sql .= " AND (n.nombre LIKE ? OR n.descripcion LIKE ? OR n.direccion LIKE ?)";
-            $params[] = '%' . $query . '%';
-            $params[] = '%' . $query . '%';
-            $params[] = '%' . $query . '%';
+            $sql .= " AND (
+                n.nombre LIKE ? 
+                OR n.descripcion LIKE ? 
+                OR n.direccion LIKE ?
+                OR c.nombre LIKE ?
+                OR s.nombre LIKE ?
+                OR EXISTS (
+                    SELECT 1 FROM productos p 
+                    WHERE p.negocio_id = n.id 
+                    AND (p.nombre LIKE ? OR p.descripcion LIKE ?)
+                )
+            )";
+            $param = '%' . $query . '%';
+            $params[] = $param;
+            $params[] = $param;
+            $params[] = $param;
+            $params[] = $param;
+            $params[] = $param;
+            $params[] = $param;
+            $params[] = $param;
         }
         if ($categoriaId) {
             $sql .= " AND n.categoria_id = ?";

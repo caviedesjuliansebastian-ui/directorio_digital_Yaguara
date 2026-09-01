@@ -1,6 +1,10 @@
-/uploads/temp/
+# Logs y temporales
 *.log
+scratch/
+.system_generated/
+thumbs.db
 .DS_Store
-Thumbs.db
+
+# IDEs
 .vscode/
 .idea/

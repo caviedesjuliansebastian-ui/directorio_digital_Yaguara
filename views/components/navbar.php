@@ -14,6 +14,10 @@
             <button class="btn btn-dark-pill d-none d-lg-flex" style="border-color: #f97316; color: #f97316;" data-bs-toggle="modal" data-bs-target="#locationModal">
                 <i class="fas fa-map-marker-alt"></i> Yaguará (Huila) <i class="fas fa-chevron-down ms-1" style="font-size:0.7rem;"></i>
             </button>
+
+            <a href="<?= BASE_URL ?>index.php?url=negocio/listado" class="btn btn-outline-warning btn-sm d-none d-xl-flex align-items-center gap-2 text-decoration-none fw-semibold" style="border-radius:20px; border-color: rgba(245, 158, 11, 0.4); color: #f59e0b; padding: 0.45rem 1rem; font-size: 0.85rem; transition: all 0.2s ease;">
+                <i class="fas fa-th-large"></i> Comercios & Servicios
+            </a>
         </div>
 
         <!-- Search Bar -->

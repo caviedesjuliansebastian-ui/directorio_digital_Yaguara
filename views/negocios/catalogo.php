@@ -85,7 +85,7 @@
                                 <div class="row g-0 h-100">
                                     <div class="col-4 position-relative" style="min-height:100px;">
                                         <?php if ($p['foto']): ?>
-                                            <img src="<?= BASE_URL . $p['foto'] ?>" class="img-fluid rounded-start-4 h-100 w-100" style="object-fit:cover;" alt="<?= htmlspecialchars($p['nombre']) ?>">
+                                            <img src="<?= (str_starts_with($p['foto'], 'http') ? '' : BASE_URL) . $p['foto'] ?>" class="img-fluid rounded-start-4 h-100 w-100" style="object-fit:cover;" alt="<?= htmlspecialchars($p['nombre']) ?>">
                                         <?php else: ?>
                                             <div class="bg-dark rounded-start-4 h-100 w-100 d-flex align-items-center justify-content-center text-muted">
                                                 <i class="fas fa-image fa-2x"></i>

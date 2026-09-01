@@ -9,7 +9,7 @@ class ProductoController extends Controller {
         $negocioModel = $this->model('Negocio');
         $negocio = $negocioModel->getById($negocioId);
 
-        if (!$negocio || $negocio['usuario_id'] != $_SESSION['usuario_id']) {
+        if (!$negocio || ($negocio['usuario_id'] != $_SESSION['usuario_id'] && ($_SESSION['usuario_rol'] ?? '') !== 'administrador')) {
             $_SESSION['error'] = 'No tienes permiso para gestionar el catálogo de este negocio.';
             $this->redirect('usuario/mis_negocios');
         }
@@ -37,7 +37,7 @@ class ProductoController extends Controller {
             $negocioModel = $this->model('Negocio');
             $negocio = $negocioModel->getById($negocioId);
 
-            if (!$negocio || $negocio['usuario_id'] != $_SESSION['usuario_id']) {
+            if (!$negocio || ($negocio['usuario_id'] != $_SESSION['usuario_id'] && ($_SESSION['usuario_rol'] ?? '') !== 'administrador')) {
                 $this->redirect('usuario/mis_negocios');
             }
 

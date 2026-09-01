@@ -232,19 +232,39 @@ class NegocioController extends Controller {
     }
 
     // Toggle favorito
+    // Toggle favorito (agregar o quitar)
     public function favorito() {
-        $this->requireAuth();
-
         $negocioId = (int)($_POST['negocio_id'] ?? $_GET['id'] ?? 0);
+        $isAjax = (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') 
+                  || (isset($_SERVER['HTTP_ACCEPT']) && str_contains($_SERVER['HTTP_ACCEPT'], 'application/json'))
+                  || isset($_POST['ajax']) || isset($_GET['ajax']);
+
+        if (!$this->isLoggedIn()) {
+            if ($isAjax) {
+                $this->json([
+                    'exito' => false,
+                    'login_requerido' => true,
+                    'mensaje' => 'Debes iniciar sesión para guardar favoritos',
+                    'login_url' => BASE_URL . 'index.php?url=autenticacion/login'
+                ], 401);
+            }
+            $this->requireAuth();
+        }
+
         if ($negocioId <= 0) {
+            if ($isAjax) {
+                $this->json(['exito' => false, 'mensaje' => 'Negocio inválido'], 400);
+            }
             $this->redirect('negocio/listado');
         }
 
         $favoritoModel = $this->model('Favorito');
         $resultado = $favoritoModel->toggle($_SESSION['usuario_id'], $negocioId);
+        $totalFavoritos = $favoritoModel->contarPorNegocio($negocioId);
+        $resultado['total_favoritos'] = $totalFavoritos;
+        $resultado['exito'] = true;
 
-        // Si es AJAX, responder JSON
-        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+        if ($isAjax) {
             $this->json($resultado);
         }
 

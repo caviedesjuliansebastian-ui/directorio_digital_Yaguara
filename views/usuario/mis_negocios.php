@@ -3,37 +3,37 @@
      ============================================================ -->
 <div class="container py-5">
     
-    <!-- Provider Header Metrics -->
+    <!-- Provider Header Metrics (100% REALES DESDE BD) -->
     <div class="row g-3 mb-4">
         <div class="col-6 col-lg-3">
             <div class="p-3 rounded-4" style="background: var(--bg-card); border: 1px solid var(--border-color);">
-                <small class="text-secondary d-block mb-1" style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Tratos Cerrados</small>
-                <div class="h3 fw-bold text-white mb-0">12</div>
-                <small class="text-success" style="font-size: 0.72rem;"><i class="fas fa-arrow-up me-1"></i>+4 esta semana</small>
+                <small class="text-secondary d-block mb-1" style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;"><i class="fas fa-store me-1 text-warning"></i> Comercios Registrados</small>
+                <div class="h3 fw-bold text-white mb-0"><?= $totalNegocios ?? count($negocios ?? []) ?></div>
+                <small class="text-secondary" style="font-size: 0.72rem;">Locales en Yaguará</small>
             </div>
         </div>
         
         <div class="col-6 col-lg-3">
             <div class="p-3 rounded-4" style="background: var(--bg-card); border: 1px solid var(--border-color);">
-                <small class="text-secondary d-block mb-1" style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Ventas Totales (GMV)</small>
-                <div class="h3 fw-bold text-white mb-0">$384.000</div>
-                <small class="text-secondary" style="font-size: 0.72rem;">En transacciones locales</small>
+                <small class="text-secondary d-block mb-1" style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;"><i class="fas fa-box-open me-1 text-warning"></i> Total Productos</small>
+                <div class="h3 fw-bold text-white mb-0"><?= number_format($totalProductos ?? 0) ?></div>
+                <small class="text-secondary" style="font-size: 0.72rem;">En vitrina y catálogo</small>
             </div>
         </div>
 
         <div class="col-6 col-lg-3">
             <div class="p-3 rounded-4" style="background: var(--bg-card); border: 1px solid var(--border-color);">
-                <small class="text-secondary d-block mb-1" style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Comisión Servi-Go (5%)</small>
-                <div class="h3 fw-bold mb-0" style="color: var(--color-success);">$19.200</div>
-                <small class="text-secondary" style="font-size: 0.72rem;">Tarifa de servicio deducida</small>
+                <small class="text-secondary d-block mb-1" style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;"><i class="fas fa-eye me-1 text-warning"></i> Visitas Totales</small>
+                <div class="h3 fw-bold mb-0" style="color: var(--color-success);"><?= number_format($totalVisitas ?? 0) ?></div>
+                <small class="text-secondary" style="font-size: 0.72rem;">Visualizaciones de clientes</small>
             </div>
         </div>
 
         <div class="col-6 col-lg-3">
             <div class="p-3 rounded-4" style="background: var(--bg-card); border: 1px solid var(--border-color);">
-                <small class="text-secondary d-block mb-1" style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Tasa de Respuesta</small>
-                <div class="h3 fw-bold mb-0" style="color: var(--color-primary);">99%</div>
-                <small class="text-warning" style="font-size: 0.72rem;">~4 min promedio</small>
+                <small class="text-secondary d-block mb-1" style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;"><i class="fas fa-comments me-1 text-warning"></i> Mensajes de Chat</small>
+                <div class="h3 fw-bold mb-0" style="color: var(--color-primary);"><?= number_format($totalMensajes ?? 0) ?></div>
+                <small class="text-secondary" style="font-size: 0.72rem;">Consultas en la app</small>
             </div>
         </div>
     </div>
@@ -44,6 +44,9 @@
             <div class="card border-0 shadow-sm rounded-4" style="background:var(--bg-card); border: 1px solid var(--border-color) !important;">
                 <div class="card-body p-0">
                     <div class="list-group list-group-flush rounded-4">
+                        <a href="<?= BASE_URL ?>index.php?url=negocio/listado" class="list-group-item list-group-item-action p-3 text-warning fw-semibold" style="background:rgba(245, 158, 11, 0.08); border-color:var(--border-color);">
+                            <i class="fas fa-th-large me-2"></i> Ver Comercios & Servicios
+                        </a>
                         <a href="<?= BASE_URL ?>index.php?url=usuario/perfil" class="list-group-item list-group-item-action p-3 text-secondary" style="background:transparent; border-color:var(--border-color);">
                             <i class="fas fa-user-circle me-2"></i> Mi Perfil
                         </a>
@@ -71,19 +74,29 @@
                     <h4 class="m-0 text-white fw-bold"><i class="fas fa-store-alt me-2 text-warning"></i>Mis Negocios & Comercios</h4>
                     <p class="text-secondary small mb-0">Gestiona tu catálogo de productos, responde a clientes y descarga tu código QR.</p>
                 </div>
-                <a href="<?= BASE_URL ?>index.php?url=negocio/crear" class="btn btn-warning btn-sm fw-bold px-3" style="background: var(--color-primary); color: white; border: none; border-radius: 8px;">
-                    <i class="fas fa-plus-circle me-1"></i> Registrar Otro Negocio
-                </a>
+                <div class="d-flex gap-2">
+                    <a href="<?= BASE_URL ?>index.php?url=negocio/listado" class="btn btn-outline-warning btn-sm fw-semibold px-3" style="border-radius: 8px;">
+                        <i class="fas fa-th-large me-1"></i> Ver Todos los Comercios
+                    </a>
+                    <a href="<?= BASE_URL ?>index.php?url=negocio/crear" class="btn btn-warning btn-sm fw-bold px-3 text-white" style="background: var(--color-primary); border: none; border-radius: 8px;">
+                        <i class="fas fa-plus-circle me-1"></i> Registrar Otro Negocio
+                    </a>
+                </div>
             </div>
 
             <?php if (empty($negocios)): ?>
                 <div class="p-5 text-center rounded-4" style="background: var(--bg-card); border: 1px dashed var(--border-color);">
                     <div style="font-size: 3.5rem; color: var(--border-light); margin-bottom: 1rem;"><i class="fas fa-store-slash"></i></div>
                     <h4 class="text-white">Aún no tienes comercios registrados</h4>
-                    <p class="text-secondary small mb-3">Registra tu local o servicio en Yaguará para empezar a recibir clientes y pedidos.</p>
-                    <a href="<?= BASE_URL ?>index.php?url=negocio/crear" class="btn btn-warning fw-bold text-white px-4" style="background: var(--color-primary); border: none; border-radius: 10px;">
-                        Comenzar Registro
-                    </a>
+                    <p class="text-secondary small mb-4">Puedes explorar todos los 44 comercios y servicios de Yaguará o registrar tu propio negocio en la plataforma.</p>
+                    <div class="d-flex justify-content-center gap-3 flex-wrap">
+                        <a href="<?= BASE_URL ?>index.php?url=negocio/listado" class="btn btn-outline-warning fw-bold px-4 py-2" style="border-radius: 10px;">
+                            <i class="fas fa-th-large me-2"></i> Explorar Comercios y Servicios
+                        </a>
+                        <a href="<?= BASE_URL ?>index.php?url=negocio/crear" class="btn btn-warning fw-bold text-white px-4 py-2" style="background: var(--color-primary); border: none; border-radius: 10px;">
+                            <i class="fas fa-plus-circle me-2"></i> Comenzar Registro de Negocio
+                        </a>
+                    </div>
                 </div>
             <?php else: ?>
                 <div class="row row-cols-1 row-cols-md-2 g-4">
@@ -112,14 +125,18 @@
                                         </div>
                                         <small class="text-secondary d-block mb-3"><?= htmlspecialchars($n['categoria_nombre'] ?? 'Comercio') ?> • <?= htmlspecialchars($n['sector_nombre'] ?? 'Yaguará') ?></small>
                                         
+                                        <?php 
+                                        $prodModel = new Producto();
+                                        $prodsCount = count($prodModel->getByNegocio($n['id']));
+                                        ?>
                                         <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom" style="border-color:var(--border-color) !important;">
                                             <div class="text-center">
                                                 <div class="h5 m-0 text-warning fw-bold"><?= number_format($n['visitas']) ?></div>
                                                 <small class="text-secondary" style="font-size:0.7rem;text-transform:uppercase;">Visitas</small>
                                             </div>
                                             <div class="text-center">
-                                                <div class="h5 m-0 text-white fw-bold">100%</div>
-                                                <small class="text-secondary" style="font-size:0.7rem;text-transform:uppercase;">Respuesta</small>
+                                                <div class="h5 m-0 text-white fw-bold"><?= $prodsCount ?></div>
+                                                <small class="text-secondary" style="font-size:0.7rem;text-transform:uppercase;">Productos</small>
                                             </div>
                                             <div class="text-center">
                                                 <div class="h5 m-0 text-warning fw-bold"><?= date('d/m/Y', strtotime($n['fecha_creacion'])) ?></div>

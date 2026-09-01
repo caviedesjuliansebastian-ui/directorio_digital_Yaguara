@@ -20,7 +20,7 @@
                     <?php endif; ?>
                 </ol>
             </nav>
-            <span class="text-secondary small"><?= count($negocios ?? []) ?> resultados encontrados</span>
+            <span id="total-resultados-count" class="text-secondary small"><?= count($negocios ?? []) ?> resultados encontrados</span>
         </div>
 
         <div class="row g-4">
@@ -32,17 +32,18 @@
                         <i class="fas fa-filter text-warning"></i> Filtros
                     </h5>
                     
-                    <!-- Búsqueda -->
-                    <div class="mb-4">
+                    <!-- Búsqueda en Vivo -->
+                    <div class="mb-4 position-relative">
                         <label class="form-label text-secondary small fw-bold">Buscar por Nombre / Producto</label>
-                        <form method="GET" action="<?= BASE_URL ?>index.php">
+                        <form method="GET" action="<?= BASE_URL ?>index.php" id="sidebar-search-form">
                             <input type="hidden" name="url" value="negocio/listado">
-                            <div class="input-group">
-                                <input type="text" name="q" class="form-control bg-dark text-white border-secondary" value="<?= htmlspecialchars($query ?? '') ?>" placeholder="Ej. quesillo, mojarra...">
-                                <button type="submit" class="btn btn-warning text-dark fw-bold" style="background: var(--color-primary); color: white !important; border: none;"><i class="fas fa-search"></i></button>
+                            <div class="input-group position-relative">
+                                <input type="text" name="q" id="sidebar-search-input" class="form-control bg-dark text-white border-secondary" value="<?= htmlspecialchars($query ?? '') ?>" placeholder="Ej. quesillo, mojarra, motobomba..." autocomplete="off" style="border-radius: 8px 0 0 8px;">
+                                <button type="button" id="sidebar-search-btn" class="btn btn-warning text-dark fw-bold" style="background: var(--color-primary); color: white !important; border: none; border-radius: 0 8px 8px 0;"><i class="fas fa-search"></i></button>
                             </div>
-                            <?php if (!empty($categoriaId)): ?><input type="hidden" name="categoria" value="<?= $categoriaId ?>"><?php endif; ?>
-                            <?php if (!empty($sectorId)): ?><input type="hidden" name="sector" value="<?= $sectorId ?>"><?php endif; ?>
+                            <div id="sidebar-search-results" class="search-results-dropdown" style="display:none; position:absolute; top:100%; left:0; right:0; background:#181a1d; border:1px solid #2d3139; border-radius:12px; margin-top:0.35rem; z-index:1050; max-height:380px; overflow-y:auto; box-shadow:0 10px 25px rgba(0,0,0,0.6);"></div>
+                            <?php if (!empty($categoriaId)): ?><input type="hidden" name="categoria" id="filter-categoria-id" value="<?= $categoriaId ?>"><?php endif; ?>
+                            <?php if (!empty($sectorId)): ?><input type="hidden" name="sector" id="filter-sector-id" value="<?= $sectorId ?>"><?php endif; ?>
                         </form>
                     </div>
                     
@@ -86,27 +87,27 @@
             <!-- Grid de Negocios -->
             <div class="col-lg-9">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h4 class="text-white fw-bold m-0">
+                    <h4 class="text-white fw-bold m-0" id="listado-titulo">
                         <?= !empty($categoriaActual) ? htmlspecialchars($categoriaActual['nombre']) : (!empty($sectorActual) ? 'Sector: ' . htmlspecialchars($sectorActual['nombre']) : 'Todos los Comercios y Servicios') ?>
                     </h4>
                 </div>
 
-                <?php if (empty($negocios)): ?>
-                    <div class="p-5 text-center rounded-4" style="background: var(--bg-card); border: 1px dashed var(--border-color);">
-                        <i class="fas fa-search fa-3x mb-3 text-secondary opacity-50"></i>
-                        <h5 class="text-white">No se encontraron comercios en esta categoría</h5>
-                        <p class="text-secondary small mb-3">Intenta cambiar los filtros de búsqueda o seleccionar otro sector.</p>
-                        <a href="<?= BASE_URL ?>index.php?url=negocio/listado" class="btn btn-warning btn-sm text-white fw-bold px-3" style="background: var(--color-primary); border: none; border-radius: 8px;">
-                            Ver Todos los Comercios
-                        </a>
-                    </div>
-                <?php else: ?>
-                    <div class="row row-cols-1 row-cols-md-2 g-4">
+                <div id="negocios-grid-container" class="row row-cols-1 row-cols-md-2 g-4" data-categoria="<?= $categoriaId ?? '' ?>" data-sector="<?= $sectorId ?? '' ?>" data-verificados="<?= !empty($_GET['verificados']) ? 'true' : '' ?>">
+                    <?php if (empty($negocios)): ?>
+                        <div class="col-12 p-5 text-center rounded-4" style="background: var(--bg-card); border: 1px dashed var(--border-color);">
+                            <i class="fas fa-search fa-3x mb-3 text-secondary opacity-50"></i>
+                            <h5 class="text-white">No se encontraron comercios en esta categoría</h5>
+                            <p class="text-secondary small mb-3">Intenta cambiar los filtros de búsqueda o seleccionar otro sector.</p>
+                            <a href="<?= BASE_URL ?>index.php?url=negocio/listado" class="btn btn-warning btn-sm text-white fw-bold px-3" style="background: var(--color-primary); border: none; border-radius: 8px;">
+                                Ver Todos los Comercios
+                            </a>
+                        </div>
+                    <?php else: ?>
                         <?php foreach ($negocios as $negocio): ?>
                             <?php include ROOT_PATH . 'views/components/card_negocio.php'; ?>
                         <?php endforeach; ?>
-                    </div>
-                <?php endif; ?>
+                    <?php endif; ?>
+                </div>
             </div>
 
         </div>

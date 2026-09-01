@@ -11,7 +11,7 @@ $diaHoy = (int)date('w');
 <!-- Header con imagen -->
 <div class="ficha-header">
     <?php if (!empty($n['imagen_portada'])): ?>
-        <img src="<?= BASE_URL . $n['imagen_portada'] ?>" alt="<?= htmlspecialchars($n['nombre']) ?>">
+        <img src="<?= (str_starts_with($n['imagen_portada'], 'http') ? '' : BASE_URL) . $n['imagen_portada'] ?>" alt="<?= htmlspecialchars($n['nombre']) ?>">
     <?php else: ?>
         <div style="width:100%;height:100%;background:<?= $catColor ?>;display:flex;align-items:center;justify-content:center;">
             <i class="<?= $n['categoria_icono'] ?? 'fas fa-store' ?>" style="font-size:5rem;color:rgba(255,255,255,0.2)"></i>
@@ -21,7 +21,7 @@ $diaHoy = (int)date('w');
     <div class="header-content">
         <div class="d-flex align-items-end gap-3">
             <?php if (!empty($n['logo'])): ?>
-                <img src="<?= BASE_URL . $n['logo'] ?>" alt="" class="ficha-logo">
+                <img src="<?= (str_starts_with($n['logo'], 'http') ? '' : BASE_URL) . $n['logo'] ?>" alt="" class="ficha-logo">
             <?php endif; ?>
             <div>
                 <span class="badge mb-2" style="background:<?= $catColor ?>;font-size:0.75rem;">
@@ -62,18 +62,13 @@ $diaHoy = (int)date('w');
                 <span class="text-muted" style="font-size:0.85rem;">
                     <i class="fas fa-eye me-1"></i> <?= number_format($n['visitas']) ?> visitas
                 </span>
-                <span class="text-muted" style="font-size:0.85rem;">
-                    <i class="fas fa-heart me-1"></i> <?= $totalFavoritos ?> favoritos
+                <span class="text-muted" style="font-size:0.85rem;" id="ficha-favoritos-counter">
+                    <i class="fas fa-heart me-1 text-danger"></i> <?= $totalFavoritos ?> favoritos
                 </span>
                 
-                <?php if (isset($_SESSION['usuario_id'])): ?>
-                    <form method="POST" action="<?= BASE_URL ?>index.php?url=negocio/favorito" class="d-inline">
-                        <input type="hidden" name="negocio_id" value="<?= $n['id'] ?>">
-                        <button type="submit" class="btn btn-sm <?= $esFavorito ? 'btn-danger' : 'btn-outline-secondary' ?>" style="border-radius:var(--radius-full);">
-                            <i class="fas fa-heart"></i> <?= $esFavorito ? 'Guardado' : 'Guardar' ?>
-                        </button>
-                    </form>
-                <?php endif; ?>
+                <button type="button" id="btn-favorito-ficha" class="btn btn-sm <?= $esFavorito ? 'btn-danger' : 'btn-outline-secondary' ?>" onclick="toggleFavorito(<?= $n['id'] ?>, this, event)" style="border-radius:var(--radius-full);">
+                    <i class="<?= $esFavorito ? 'fas' : 'far' ?> fa-heart"></i> <?= $esFavorito ? 'Guardado' : 'Guardar en Favoritos' ?>
+                </button>
             </div>
 
             <!-- Descripción -->
@@ -95,25 +90,52 @@ $diaHoy = (int)date('w');
                 <div class="row row-cols-1 row-cols-md-2 g-3">
                     <?php foreach ($productos as $prod): ?>
                         <div class="col">
-                            <div class="p-3 rounded-4 h-100 d-flex flex-column justify-content-between" style="background:var(--bg-card-light); border:1px solid var(--border-color);">
-                                <div>
-                                    <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
-                                        <h6 class="fw-bold text-white mb-0"><?= htmlspecialchars($prod['nombre']) ?></h6>
-                                        <span class="badge bg-warning text-dark fw-bold">$<?= number_format($prod['precio'], 0, ',', '.') ?></span>
+                            <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden" style="background:var(--bg-card-light); border:1px solid var(--border-color) !important;">
+                                <div class="row g-0 h-100">
+                                    <div class="col-4 position-relative" style="min-height: 140px; background: #171717;">
+                                        <?php if (!empty($prod['foto'])): ?>
+                                            <img src="<?= (str_starts_with($prod['foto'], 'http') ? '' : BASE_URL) . $prod['foto'] ?>" alt="<?= htmlspecialchars($prod['nombre']) ?>" class="w-100 h-100" style="object-fit: cover; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80'">
+                                        <?php else: ?>
+                                            <div class="w-100 h-100 d-flex align-items-center justify-content-center text-secondary">
+                                                <i class="fas fa-utensils fa-2x opacity-50"></i>
+                                            </div>
+                                        <?php endif; ?>
                                     </div>
-                                    <p class="text-secondary mb-3" style="font-size:0.8rem; line-height:1.5;">
-                                        <?= htmlspecialchars($prod['descripcion']) ?>
-                                    </p>
-                                </div>
-                                <div class="d-flex justify-content-between align-items-center pt-2 border-top gap-2" style="border-color:var(--border-color)!important;">
-                                    <small class="text-muted" style="font-size:0.7rem;">Por <?= htmlspecialchars($prod['unidad_medida']) ?></small>
-                                    <div class="d-flex gap-1">
-                                        <button type="button" class="btn btn-sm btn-outline-warning d-flex align-items-center gap-1" onclick="addToCart(<?= $prod['id'] ?>, '<?= addslashes($prod['nombre']) ?>', <?= $prod['precio'] ?>, <?= $n['id'] ?>, '<?= addslashes($n['nombre']) ?>')" style="font-size:0.75rem; border-radius:8px;">
-                                            <i class="fas fa-cart-plus"></i> Carrito
-                                        </button>
-                                        <a href="<?= isset($_SESSION['usuario_id']) ? BASE_URL . 'index.php?url=chat/conversacion/' . $n['id'] : BASE_URL . 'index.php?url=autenticacion/login' ?>" class="btn btn-sm btn-warning text-dark fw-bold d-flex align-items-center gap-1" style="background: var(--color-primary); color: white !important; border: none; font-size:0.75rem; border-radius:8px;">
-                                            <i class="fas fa-comment-dots"></i> Chat
-                                        </a>
+                                    <div class="col-8">
+                                        <div class="p-3 d-flex flex-column justify-content-between h-100">
+                                            <div>
+                                                <div class="d-flex justify-content-between align-items-start gap-1 mb-1">
+                                                    <h6 class="fw-bold text-white mb-0 text-truncate" style="font-size: 0.95rem; line-height: 1.3;" title="<?= htmlspecialchars($prod['nombre']) ?>"><?= htmlspecialchars($prod['nombre']) ?></h6>
+                                                </div>
+                                                <div class="mb-2">
+                                                    <span class="fw-bold" style="color: #ffb703; font-size: 0.95rem;">
+                                                        $<?= number_format($prod['precio'], 0, ',', '.') ?> COP
+                                                    </span>
+                                                    <small class="text-secondary fw-normal">/ <?= htmlspecialchars($prod['unidad_medida'] ?? 'Unidad') ?></small>
+                                                </div>
+                                                <p class="text-secondary mb-3" style="font-size:0.78rem; line-height:1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;" title="<?= htmlspecialchars($prod['descripcion']) ?>">
+                                                    <?= htmlspecialchars($prod['descripcion']) ?>
+                                                </p>
+                                            </div>
+                                            <div class="d-flex align-items-center justify-content-between pt-2 border-top gap-2" style="border-color:var(--border-color)!important;">
+                                                <!-- Selector de Cantidad - 1 + -->
+                                                <div class="d-flex align-items-center bg-dark rounded-pill border border-secondary px-1" style="height: 32px;">
+                                                    <button type="button" class="btn btn-sm text-secondary px-2 py-0 border-0" onclick="const input = document.getElementById('qty-prod-<?= $prod['id'] ?>'); if(parseInt(input.value) > 1) input.value = parseInt(input.value) - 1;">-</button>
+                                                    <input type="text" id="qty-prod-<?= $prod['id'] ?>" value="1" readonly class="bg-transparent text-white text-center fw-bold border-0 p-0" style="width: 24px; font-size: 0.8rem;">
+                                                    <button type="button" class="btn btn-sm text-secondary px-2 py-0 border-0" onclick="const input = document.getElementById('qty-prod-<?= $prod['id'] ?>'); input.value = parseInt(input.value) + 1;">+</button>
+                                                </div>
+
+                                                <!-- Botones de Acción -->
+                                                <div class="d-flex gap-1">
+                                                    <button type="button" class="btn btn-sm btn-warning text-white fw-bold d-flex align-items-center gap-1" onclick="addToCart(<?= $prod['id'] ?>, '<?= addslashes($prod['nombre']) ?>', <?= $prod['precio'] ?>, <?= $n['id'] ?>, '<?= addslashes($n['nombre']) ?>', document.getElementById('qty-prod-<?= $prod['id'] ?>').value)" style="background: var(--color-primary); border: none; font-size:0.75rem; border-radius:8px; padding: 0.35rem 0.65rem;">
+                                                        <i class="fas fa-plus"></i> Añadir al Pedido
+                                                    </button>
+                                                    <a href="<?= isset($_SESSION['usuario_id']) ? BASE_URL . 'index.php?url=chat/conversacion/' . $n['id'] : BASE_URL . 'index.php?url=autenticacion/login' ?>" class="btn btn-sm btn-dark text-secondary d-flex align-items-center justify-content-center" title="Chat directo" style="border-radius:8px; width: 32px; height: 32px; padding: 0;">
+                                                        <i class="fas fa-comment-dots"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -130,7 +152,7 @@ $diaHoy = (int)date('w');
                 <div class="gallery-grid">
                     <?php foreach ($imagenes as $img): ?>
                         <div class="gallery-item">
-                            <img src="<?= BASE_URL . $img['url_imagen'] ?>" alt="<?= htmlspecialchars($img['descripcion'] ?? '') ?>" loading="lazy">
+                            <img src="<?= (str_starts_with($img['url_imagen'], 'http') ? '' : BASE_URL) . $img['url_imagen'] ?>" alt="<?= htmlspecialchars($img['descripcion'] ?? '') ?>" loading="lazy">
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -246,17 +268,15 @@ $diaHoy = (int)date('w');
                 </div>
                 <?php endif; ?>
 
-                <?php if (!empty($n['whatsapp'])): ?>
                 <div class="info-row">
-                    <i class="fab fa-whatsapp info-icon" style="color:#25d366;"></i>
+                    <i class="fas fa-comment-dots info-icon" style="color:var(--color-primary);"></i>
                     <div>
-                        <strong>WhatsApp</strong><br>
-                        <a href="https://wa.me/57<?= preg_replace('/[^0-9]/', '', $n['whatsapp']) ?>" target="_blank" style="color:#25d366;">
-                            Enviar mensaje <i class="fas fa-external-link-alt" style="font-size:0.7rem;"></i>
+                        <strong>Chat Directo en la App</strong><br>
+                        <a href="<?= isset($_SESSION['usuario_id']) ? BASE_URL . 'index.php?url=chat/conversacion/' . $n['id'] : BASE_URL . 'index.php?url=autenticacion/login' ?>" style="color:var(--color-primary); font-weight:600;">
+                            <i class="fas fa-paper-plane me-1"></i> Hablar con el Proveedor
                         </a>
                     </div>
                 </div>
-                <?php endif; ?>
 
                 <?php if (!empty($n['email'])): ?>
                 <div class="info-row">

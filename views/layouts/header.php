@@ -23,6 +23,9 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="<?= BASE_URL ?>public/assets/css/directorio.css?v=<?= time() ?>">
     
+    <!-- Global JS Variables -->
+    <script>window.BASE_URL = "<?= BASE_URL ?>";</script>
+    
     <!-- PWA -->
     <link rel="manifest" href="<?= BASE_URL ?>public/manifest.json">
 </head>

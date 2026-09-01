@@ -8,6 +8,9 @@
             <div class="card border-0 shadow-sm rounded-4" style="background:var(--bg-card);">
                 <div class="card-body p-0">
                     <div class="list-group list-group-flush rounded-4">
+                        <a href="<?= BASE_URL ?>index.php?url=negocio/listado" class="list-group-item list-group-item-action p-3 text-warning fw-semibold" style="background:rgba(245, 158, 11, 0.08); border-color:var(--border-color);">
+                            <i class="fas fa-th-large me-2"></i> Ver Comercios Y Servicios
+                        </a>
                         <a href="<?= BASE_URL ?>index.php?url=usuario/perfil" class="list-group-item list-group-item-action p-3 text-secondary" style="background:transparent; border-color:var(--border-color);">
                             <i class="fas fa-user-circle me-2"></i> Mi Perfil
                         </a>

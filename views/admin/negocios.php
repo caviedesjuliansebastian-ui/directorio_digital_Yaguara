@@ -67,7 +67,7 @@
                             </td>
                             <td>
                                 <small><i class="fas fa-user me-1 text-muted"></i><?= htmlspecialchars($n['propietario_nombre']) ?></small><br>
-                                <small><i class="fas fa-phone me-1 text-muted"></i><?= htmlspecialchars($n['telefono'] ?? $n['whatsapp'] ?? 'N/A') ?></small>
+                                <small><i class="fas fa-phone me-1 text-muted"></i><?= htmlspecialchars($n['telefono'] ?? 'N/A') ?></small>
                             </td>
                             <td>
                                 <span class="status-badge <?= $n['estado'] ?>"><?= $n['estado'] ?></span>

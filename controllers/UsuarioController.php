@@ -49,13 +49,46 @@ class UsuarioController extends Controller {
         $this->view('layouts/footer');
     }
 
-    // Listado de negocios del usuario
+    // Listado de negocios del usuario con métricas 100% reales
     public function mis_negocios() {
         $negocioModel = $this->model('Negocio');
-        $negocios = $negocioModel->getByUsuarioId($_SESSION['usuario_id']);
+        $usuarioId = $_SESSION['usuario_id'];
+        $rol = $_SESSION['usuario_rol'] ?? 'usuario';
 
-        $this->view('layouts/header', ['titulo' => 'Mis Negocios — ' . APP_NAME]);
-        $this->view('usuario/mis_negocios', ['negocios' => $negocios]);
+        // Obtener los negocios del usuario actual (o todos si es administrador para supervisión)
+        $negocios = $negocioModel->getByUsuarioId($usuarioId);
+        if (empty($negocios) && $rol === 'administrador') {
+            $negocios = $negocioModel->getTodos();
+        }
+
+        $totalNegocios = count($negocios);
+        $totalVisitas = 0;
+        $totalProductos = 0;
+        $totalMensajes = 0;
+
+        $negocioIds = array_column($negocios, 'id');
+        if (!empty($negocioIds)) {
+            foreach ($negocios as $n) {
+                $totalVisitas += (int)($n['visitas'] ?? 0);
+            }
+            $db = (new Database())->getConnection();
+            $inClause = implode(',', array_map('intval', $negocioIds));
+            $stmtProd = $db->query("SELECT COUNT(*) FROM productos WHERE negocio_id IN ($inClause)");
+            $totalProductos = (int)$stmtProd->fetchColumn();
+
+            $stmtChats = $db->prepare("SELECT COUNT(*) FROM mensajes_chat WHERE destinatario_id = ? OR remitente_id = ?");
+            $stmtChats->execute([$usuarioId, $usuarioId]);
+            $totalMensajes = (int)$stmtChats->fetchColumn();
+        }
+
+        $this->view('layouts/header', ['titulo' => 'Panel de Negocios — ' . APP_NAME]);
+        $this->view('usuario/mis_negocios', [
+            'negocios' => $negocios,
+            'totalNegocios' => $totalNegocios,
+            'totalVisitas' => $totalVisitas,
+            'totalProductos' => $totalProductos,
+            'totalMensajes' => $totalMensajes
+        ]);
         $this->view('layouts/footer');
     }
 
