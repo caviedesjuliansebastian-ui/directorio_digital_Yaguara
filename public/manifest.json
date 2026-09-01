@@ -1,0 +1,22 @@
+{
+  "name": "Directorio Digital Yaguará",
+  "short_name": "Yaguará",
+  "description": "Encuentra negocios y servicios en Yaguará, Huila",
+  "start_url": "/index.php",
+  "display": "standalone",
+  "background_color": "#f0fdf4",
+  "theme_color": "#059669",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "assets/img/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "assets/img/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
