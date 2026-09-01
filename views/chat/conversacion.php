@@ -86,12 +86,12 @@
 
                 <!-- Chat Input Footer -->
                 <div class="p-3 border-top" style="background: var(--bg-card-light); border-color: var(--border-color) !important;">
-                    <form method="POST" action="<?= BASE_URL ?>index.php?url=chat/enviar" class="d-flex gap-2">
+                    <form method="POST" action="<?= BASE_URL ?>index.php?url=chat/enviar" id="chat-form" class="d-flex gap-2">
                         <input type="hidden" name="negocio_id" value="<?= $negocio['id'] ?>">
                         <input type="hidden" name="receptor_id" value="<?= $otroUsuarioId ?>">
                         
-                        <input type="text" name="mensaje" class="form-control" placeholder="Escribe un mensaje o consulta..." required autocomplete="off" style="border-radius: 12px; background: #111315 !important;">
-                        <button type="submit" class="btn btn-warning px-4 fw-bold text-dark" style="background: var(--color-primary); border: none; color: white !important; border-radius: 12px;">
+                        <input type="text" name="mensaje" id="chat-input-text" class="form-control" placeholder="Escribe un mensaje o consulta..." required autocomplete="off" style="border-radius: 12px; background: #111315 !important; border: 1px solid var(--border-color); color: white;">
+                        <button type="submit" id="chat-submit-btn" class="btn btn-warning px-4 fw-bold text-dark" style="background: var(--color-primary); border: none; color: white !important; border-radius: 12px;">
                             <i class="fas fa-paper-plane"></i>
                         </button>
                     </form>
@@ -181,15 +181,6 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label text-secondary small">Método de Pago Acordado</label>
-                        <select name="metodo_pago" class="form-select bg-dark text-white border-secondary">
-                            <option value="Efectivo Contraentrega">💵 Efectivo Contraentrega</option>
-                            <option value="Nequi">🟣 Transferencia Nequi</option>
-                            <option value="Daviplata">🔴 Daviplata</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
                         <label class="form-label text-secondary small">Valor Total Acordado (COP) *</label>
                         <input type="number" name="monto_total" class="form-control" placeholder="Ej. 65000" min="1000" step="500" required>
                         <small class="text-muted" style="font-size: 0.72rem;">La plataforma calculará automáticamente la tarifa de protección del 5%.</small>
@@ -198,7 +189,7 @@
                 
                 <div class="modal-footer border-0 pt-0">
                     <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-warning btn-sm fw-bold px-3" style="background: var(--color-primary); color: white; border: none;">
+                    <button type="submit" class="btn btn-warning btn-sm fw-bold px-3 text-white" style="background: var(--color-primary); border: none;">
                         Enviar al Chat <i class="fas fa-paper-plane ms-1"></i>
                     </button>
                 </div>
@@ -209,11 +200,63 @@
 <?php endif; ?>
 
 <script>
-// Auto-scroll al final de los mensajes
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('chat-messages-container');
-    if (container) {
-        container.scrollTop = container.scrollHeight;
+    const form = document.getElementById('chat-form');
+    const input = document.getElementById('chat-input-text');
+
+    function scrollToBottom() {
+        if (container) {
+            container.scrollTop = container.scrollHeight;
+        }
+    }
+
+    scrollToBottom();
+
+    if (form && input) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const texto = input.value.trim();
+            if (!texto) return;
+
+            // Formatear hora actual
+            const now = new Date();
+            const horaStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            // Crear y agregar burbuja inmediatamente
+            const bubbleHtml = `
+                <div class="d-flex justify-content-end">
+                    <div class="p-3 rounded-4" style="max-width: 75%; background: var(--color-primary); color: white; border-bottom-right-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.3);">
+                        <div class="d-flex justify-content-between align-items-center gap-2 mb-1" style="font-size: 0.7rem; opacity: 0.85;">
+                            <strong>Tú</strong>
+                            <span>${horaStr}</span>
+                        </div>
+                        <div style="font-size: 0.875rem; white-space: pre-line; line-height: 1.45;">
+                            ${escapeHtml(texto)}
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', bubbleHtml);
+            input.value = '';
+            scrollToBottom();
+
+            // Enviar vía fetch AJAX al backend
+            const formData = new FormData(form);
+            formData.set('mensaje', texto);
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .catch(err => console.error('Error al enviar mensaje:', err));
+        });
+    }
+
+    function escapeHtml(text) {
+        const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+        return text.replace(/[&<>"']/g, m => map[m]);
     }
 });
 </script>

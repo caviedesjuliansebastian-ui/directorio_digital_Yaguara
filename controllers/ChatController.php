@@ -23,12 +23,21 @@ class ChatController extends Controller {
         }
 
         $usuarioActualId = $_SESSION['usuario_id'];
-        $propietarioId = $negocio['usuario_id'];
+        $propietarioId = !empty($negocio['usuario_id']) ? (int)$negocio['usuario_id'] : 1;
 
         // Determinar quién es el interlocutor
-        $otroUsuarioId = ($usuarioActualId == $propietarioId) 
-            ? (int)($_GET['cliente_id'] ?? $usuarioActualId) 
-            : $propietarioId;
+        if ($usuarioActualId == $propietarioId) {
+            $otroUsuarioId = (int)($_GET['cliente_id'] ?? 0);
+            if ($otroUsuarioId === 0) {
+                // Buscar el último cliente que escribió a este negocio
+                $db = (new Database())->getConnection();
+                $stmtLast = $db->prepare("SELECT emisor_id FROM mensajes_chat WHERE negocio_id = ? AND receptor_id = ? ORDER BY fecha_envio DESC LIMIT 1");
+                $stmtLast->execute([$negocioId, $usuarioActualId]);
+                $otroUsuarioId = (int)$stmtLast->fetchColumn() ?: 7;
+            }
+        } else {
+            $otroUsuarioId = $propietarioId;
+        }
 
         $mensajeModel = $this->model('MensajeChat');
         $tratoModel = $this->model('Trato');
@@ -62,13 +71,24 @@ class ChatController extends Controller {
         $negocioId = (int)($_POST['negocio_id'] ?? 0);
         $receptorId = (int)($_POST['receptor_id'] ?? 0);
         $mensaje = trim($_POST['mensaje'] ?? '');
+        $usuarioId = $_SESSION['usuario_id'];
 
-        if ($negocioId > 0 && $receptorId > 0 && !empty($mensaje)) {
+        if ($negocioId > 0 && !empty($mensaje)) {
+            if ($receptorId <= 0) {
+                $negocioModel = $this->model('Negocio');
+                $neg = $negocioModel->getById($negocioId);
+                $receptorId = ($neg && $neg['usuario_id'] != $usuarioId) ? (int)$neg['usuario_id'] : 1;
+            }
             $mensajeModel = $this->model('MensajeChat');
-            $mensajeModel->enviar($_SESSION['usuario_id'], $receptorId, $negocioId, $mensaje);
+            $mensajeModel->enviar($usuarioId, $receptorId, $negocioId, $mensaje);
         }
 
-        $this->redirect('chat/conversacion/' . $negocioId . ($receptorId != $_SESSION['usuario_id'] ? '?cliente_id=' . $receptorId : ''));
+        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+            $this->json(['success' => true, 'mensaje' => $mensaje, 'hora' => date('h:i A')]);
+            return;
+        }
+
+        $this->redirect('chat/conversacion/' . $negocioId . ($receptorId > 0 && $receptorId != $usuarioId ? '?cliente_id=' . $receptorId : ''));
     }
 
     // Crear / Proponer Trato

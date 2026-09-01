@@ -1,7 +1,7 @@
 -- ============================================================
 -- DIRECTORIO DIGITAL YAGUARÁ / SERVI-GO
 -- BASE DE DATOS COMPLETA: ESQUEMA + DATOS (450 PRODUCTOS)
--- Fecha de generación: 2026-09-01 15:54:21
+-- Fecha de generación: 2026-09-01 16:04:13
 -- ============================================================
 
 CREATE DATABASE IF NOT EXISTS `directorio_yaguara` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -251,7 +251,23 @@ CREATE TABLE `mensajes_chat` (
   CONSTRAINT `mensajes_chat_ibfk_1` FOREIGN KEY (`emisor_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE,
   CONSTRAINT `mensajes_chat_ibfk_2` FOREIGN KEY (`receptor_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE,
   CONSTRAINT `mensajes_chat_ibfk_3` FOREIGN KEY (`negocio_id`) REFERENCES `negocios` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Datos para la tabla: `mensajes_chat` (13 registros)
+INSERT INTO `mensajes_chat` (`id`, `emisor_id`, `receptor_id`, `negocio_id`, `mensaje`, `leido`, `fecha_envio`) VALUES
+(1, 7, 1, 32, 'Buenas tardes maestro, ¿tienen disponibilidad para revisar una fuga de agua en una tubería principal en el barrio El Triunfo?', 1, '2026-09-01 09:15:00'),
+(2, 1, 7, 32, '¡Hola muy buenos días! Claro que sí con mucho gusto, estamos disponibles. ¿Es en casa o finca?', 1, '2026-09-01 09:18:00'),
+(3, 7, 1, 32, 'Es en una casa cerca al parque principal. ¿Cuánto cuesta la visita técnica?', 1, '2026-09-01 09:20:00'),
+(4, 1, 7, 32, 'La revisión y diagnóstico tiene un costo de $25.000 COP. Si realizamos el arreglo, se descuenta del valor total del trabajo.', 1, '2026-09-01 09:22:00'),
+(5, 7, 1, 32, 'Perfecto, me parece muy bien. ¿Podría pasar hoy a las 2:00 PM?', 1, '2026-09-01 09:25:00'),
+(6, 1, 7, 32, 'Listo confirmado. A las 2:00 PM estaré allá con las herramientas y repuestos necesarios.', 1, '2026-09-01 09:28:00'),
+(7, 7, 1, 1, 'Hola Doña Stella, ¿tienen quesillos frescos en hoja de plátano para envío hoy?', 1, '2026-09-01 10:10:00'),
+(8, 1, 7, 1, '¡Hola! Sí señor, hoy sacamos quesillo fresco de 500g y 1kg recién cuajado, y también achiras tradicionales recién horneadas.', 1, '2026-09-01 10:12:00'),
+(9, 7, 1, 1, 'Excelente, me gustaría pedir 3 quesillos de 500g ($45.000) y un paquete de achiras ($10.000). Total $55.000 COP.', 1, '2026-09-01 10:15:00'),
+(10, 1, 7, 1, '¡Con gusto! Ya mismo te empaco el pedido y te lo enviamos con el domiciliario.', 1, '2026-09-01 10:18:00'),
+(11, 7, 1, 2, 'Buenas tardes, ¿tienen mesa disponible para 4 personas este domingo y mojarra frita grande?', 1, '2026-08-31 16:30:00'),
+(12, 1, 7, 2, '¡Buenas tardes! Sí señor, tenemos kioscos frente al embalse y mojarra roja fresca de 1.5 lb y 2 lb garantizada.', 1, '2026-08-31 16:35:00'),
+(13, 7, 1, 2, 'Excelente, nos vemos el domingo a la 1:00 PM. Muchas gracias.', 1, '2026-08-31 16:40:00');
 
 -- ------------------------------------------------------------
 -- Estructura de tabla: `negocios`
@@ -1821,7 +1837,12 @@ CREATE TABLE `tratos` (
   KEY `negocio_id` (`negocio_id`),
   CONSTRAINT `tratos_ibfk_1` FOREIGN KEY (`cliente_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE,
   CONSTRAINT `tratos_ibfk_2` FOREIGN KEY (`negocio_id`) REFERENCES `negocios` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Datos para la tabla: `tratos` (2 registros)
+INSERT INTO `tratos` (`id`, `cliente_id`, `negocio_id`, `concepto`, `monto_total`, `comision_plataforma`, `estado`, `fecha_creacion`, `fecha_cierre`) VALUES
+(1, 7, 1, 'Pedido 3 Quesillos 500g + Paquete Achiras', 55000.00, 2750.00, 'cerrado', '2026-09-01 10:20:00', '2026-09-01 10:25:00'),
+(2, 7, 32, 'Servicio de Reparación de Fuga en Tubería Principal', 45000.00, 2250.00, 'propuesto', '2026-09-01 09:30:00', NULL);
 
 -- ------------------------------------------------------------
 -- Estructura de tabla: `usuarios`

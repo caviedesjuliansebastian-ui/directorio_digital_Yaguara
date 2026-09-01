@@ -28,9 +28,33 @@
         </div>
 
         <!-- Actions -->
+        <?php
+        
+        $totalMensajesNavbar = 0;
+        if (isset($_SESSION['usuario_id'])) {
+            $db = (new Database())->getConnection();
+            $stmtFav = $db->prepare("SELECT COUNT(*) FROM favoritos WHERE usuario_id = ?");
+            $stmtFav->execute([$_SESSION['usuario_id']]);
+            $totalFavsNavbar = (int)$stmtFav->fetchColumn();
+
+            $stmtMsg = $db->prepare("SELECT COUNT(*) FROM mensajes_chat WHERE receptor_id = ? AND leido = 0");
+            $stmtMsg->execute([$_SESSION['usuario_id']]);
+            $totalMensajesNavbar = (int)$stmtMsg->fetchColumn();
+        }
+        ?>
         <div class="nav-actions">
-            <a href="<?= isset($_SESSION['usuario_id']) ? BASE_URL . 'index.php?url=usuario/favoritos' : BASE_URL . 'index.php?url=autenticacion/login' ?>" class="icon-btn text-decoration-none" title="Mis Favoritos"><i class="far fa-heart"></i><span class="badge-count">5</span></a>
-            <a href="<?= isset($_SESSION['usuario_id']) ? BASE_URL . 'index.php?url=chat/inbox' : BASE_URL . 'index.php?url=autenticacion/login' ?>" class="icon-btn text-decoration-none" title="Bandeja de Mensajes"><i class="far fa-comment-alt"></i><span class="badge-count yellow">1</span></a>
+            <a href="<?= isset($_SESSION['usuario_id']) ? BASE_URL . 'index.php?url=usuario/favoritos' : BASE_URL . 'index.php?url=autenticacion/login' ?>" class="icon-btn text-decoration-none" title="Mis Favoritos">
+                <i class="far fa-heart"></i>
+                <?php if ($totalFavsNavbar > 0): ?>
+                    <span class="badge-count" id="navbar-fav-badge"><?= $totalFavsNavbar ?></span>
+                <?php endif; ?>
+            </a>
+            <a href="<?= isset($_SESSION['usuario_id']) ? BASE_URL . 'index.php?url=chat/inbox' : BASE_URL . 'index.php?url=autenticacion/login' ?>" class="icon-btn text-decoration-none" title="Bandeja de Mensajes">
+                <i class="far fa-comment-alt"></i>
+                <?php if ($totalMensajesNavbar > 0): ?>
+                    <span class="badge-count yellow"><?= $totalMensajesNavbar ?></span>
+                <?php endif; ?>
+            </a>
             
             <?php if (isset($_SESSION['usuario_id'])): ?>
                 <div class="dropdown">

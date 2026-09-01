@@ -39,10 +39,13 @@ class MensajeChat extends Model {
         $stmt = $this->db->prepare("
             SELECT m.*, 
                    n.nombre as negocio_nombre, n.slug as negocio_slug, n.logo as negocio_logo,
+                   c.nombre as categoria_nombre, s.nombre as sector_nombre,
                    u_emisor.nombre as emisor_nombre,
                    u_receptor.nombre as receptor_nombre
             FROM mensajes_chat m
             JOIN negocios n ON m.negocio_id = n.id
+            LEFT JOIN categorias c ON n.categoria_id = c.id
+            LEFT JOIN sectores s ON n.sector_id = s.id
             JOIN usuarios u_emisor ON m.emisor_id = u_emisor.id
             JOIN usuarios u_receptor ON m.receptor_id = u_receptor.id
             WHERE m.id IN (
