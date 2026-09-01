@@ -33,3 +33,18 @@ define('YAGUARA_ZOOM', 15);
 
 // Zona horaria
 date_default_timezone_set('America/Bogota');
+
+// Autoload universal para Modelos, Core y Controladores
+spl_autoload_register(function ($class) {
+    $filePaths = [
+        ROOT_PATH . 'models/' . $class . '.php',
+        ROOT_PATH . 'core/' . $class . '.php',
+        ROOT_PATH . 'controllers/' . $class . '.php'
+    ];
+    foreach ($filePaths as $file) {
+        if (file_exists($file)) {
+            require_once $file;
+            return;
+        }
+    }
+});
